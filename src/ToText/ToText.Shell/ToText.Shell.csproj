@@ -1,8 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <AssemblyName>totext</AssemblyName>
+    <ApplicationIcon>totext.ico</ApplicationIcon>
+    <PackageId>ToText</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Den Delimarsky</Authors>
+    <Company>Den Delimarsky</Company>
+    <Product>ToText</Product>
+    <Description>A simple and extensible speech-to-text CLI.</Description>
+    <PackageProjectUrl>https://github.com/dend/totext</PackageProjectUrl>
+    <PackageIcon>totext.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/dend/totext</RepositoryUrl>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)..\bin</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\images\totext.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToText.SDK\ToText.SDK.csproj" />
+  </ItemGroup>
 
 </Project>
