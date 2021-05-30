@@ -4,10 +4,10 @@ namespace ToText.SDK.Interfaces
 {
     public interface IPlugin
     {
-        public string Name { get; set; }
-        public string Version { get; set; }
-        public string Author { get; set; }
-        public string WebPage { get; set; }
+        public string Name { get; }
+        public string Version { get; }
+        public string Author { get; }
+        public string WebPage { get; }
 
         public bool IsFileSupported(string inputFilePath);
         public Task<string> GetTextInRawForm(string inputFilePath);

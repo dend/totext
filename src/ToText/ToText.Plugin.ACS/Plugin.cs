@@ -6,10 +6,10 @@ namespace ToText.Plugin.ACS
 {
     public class Plugin : IPlugin
     {
-        public string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Version { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Author { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string WebPage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get => "ACS"; }
+        public string Version { get => "0.0.1-alpha"; }
+        public string Author { get => "Den Delimarsky"; }
+        public string WebPage { get => "https://den.dev"; }
 
         public Task<string> GetTextInFile(string inputFilePath, string outputFilePath)
         {
