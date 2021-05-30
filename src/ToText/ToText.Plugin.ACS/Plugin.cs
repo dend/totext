@@ -3,11 +3,13 @@ using Microsoft.CognitiveServices.Speech.Audio;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ToText.Plugin.ACS.Helpers;
 using ToText.SDK.Interfaces;
 
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.UseDllDirectoryForDependencies)]
 namespace ToText.Plugin.ACS
 {
     public class Plugin : IPlugin
@@ -24,7 +26,7 @@ namespace ToText.Plugin.ACS
             throw new NotImplementedException();
         }
 
-        public async Task<string> GetTextInRawForm(string inputFilePath)
+        public async Task<string> GetTextInRawForm(string inputFilePath, Action<string> recognitionCallback = null)
         {
             var credentials = MetaHelper.LoadSubscriptionData();
             if (credentials != null)
@@ -39,6 +41,7 @@ namespace ToText.Plugin.ACS
                 recognizer.Recognized += (sender, eventArgs) =>
                 {
                     _recognizedString.Append(eventArgs.Result.Text);
+                    recognitionCallback?.Invoke(eventArgs.Result.Text);
                 };
 
                 await recognizer.StartContinuousRecognitionAsync();
@@ -56,8 +59,9 @@ namespace ToText.Plugin.ACS
             // https://docs.microsoft.com/azure/cognitive-services/speech-service/how-to-use-codec-compressed-audio-input-streams
             // Currently only implementing the WAV suport, since it's there
             // out of the box. Down the line I could add other formats.
-            string[] supportedExtensions = { "wav" };
-            if (supportedExtensions.Any(x => string.Equals(Path.GetExtension(inputFilePath), x, StringComparison.InvariantCultureIgnoreCase)))
+            string[] supportedExtensions = { ".wav" };
+            string fileExtension = Path.GetExtension(inputFilePath);
+            if (supportedExtensions.Any(x => string.Equals(fileExtension, x, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return true;
             }

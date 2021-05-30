@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using ToText.SDK.Interfaces;
 using ToText.Shell.Helpers;
 
@@ -25,7 +26,7 @@ namespace ToText.Shell
             _log.Info($"ToText {MetaHelper.GetApplicationVersion()}");
             _log.Info("Loading plugins...");
 
-            var _plugins = LoadPlugins();
+            _plugins = LoadPlugins();
 
             if (_plugins != null && _plugins.Count() > 0)
             {
@@ -101,11 +102,21 @@ namespace ToText.Shell
                 {
                     if (sttProcessor.IsFileSupported(file))
                     {
+                        if (string.IsNullOrEmpty(outputFile))
+                        {
+                            // User opted to generate transcript on the fly, and we don't need
+                            // to write this to any file.
+                            Task transcriptionTask = Task.Run(() => sttProcessor.GetTextInRawForm(file, (data) =>
+                            {
+                                _log.Info(data);
+                            }));
 
+                            transcriptionTask.Wait();
+                        }
                     }
                     else
                     {
-
+                        _log.Info("Currently selected processor reports that the file you specified is not supported.");
                     }
                 }
                 else
@@ -119,12 +130,12 @@ namespace ToText.Shell
         {
             var builder = new ContainerBuilder();
 
-            string assemblyPattern = @"ToText\.Plugin\..+\.dll";
+            Regex assemblyPattern = new Regex(@"ToText\.Plugin\..+\.dll");
 
             var pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "plugins");
             var assemblies = Directory.EnumerateFiles(pluginPath, "*.dll", SearchOption.AllDirectories)
-                    .Where(fileName => Regex.IsMatch(fileName, assemblyPattern))
-                    .Select(Assembly.LoadFrom).ToArray();
+                .Where(path => assemblyPattern.IsMatch(Path.GetFileName(path)))
+                .Select(Assembly.LoadFrom).ToArray();
 
             builder.RegisterAssemblyTypes(assemblies).Where(t => t.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(IPlugin)))).AsImplementedInterfaces().InstancePerDependency();
 

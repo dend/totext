@@ -17,9 +17,10 @@
     <PackageIcon>totext.png</PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/dend/totext</RepositoryUrl>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>$(SolutionDir)..\bin</OutputPath>
   </PropertyGroup>
 
