@@ -4,7 +4,7 @@ namespace ToText.SDK.Interfaces
 {
     public interface IPlugin
     {
-        public string Name { get; }
+        public string Id { get; }
         public string Version { get; }
         public string Author { get; }
         public string WebPage { get; }
