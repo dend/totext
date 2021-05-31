@@ -42,3 +42,4 @@ Once the project is built, navigate to the `bin/` folder in the solution directo
 |:-------------------------|:------------|:--------|:------------|
 | Azure Cognitive Services | `acs`       | 0.0.1   | An experimental implementation of the [Azure Cognitive Services speech-to-text](https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-to-text) toolchain. Currently only WAV file support is implemented. Data from the WAV file will be sent to the Azure service for processing, and requires [an active Azure account](https://azure.microsoft.com/free/). Read more about the plugin in its [README](src/ToText/ToText.Plugin.ACS/README.md). |
 
+Any new plugins that are implemented need to follow the `ToText.Plugin.{PLUGIN_ID}` scheme.
