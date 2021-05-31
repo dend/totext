@@ -19,7 +19,7 @@ namespace ToText.Plugin.ACS
         public string Author { get => "Den Delimarsky"; }
         public string WebPage { get => "https://den.dev"; }
 
-        public bool GetTextInFile(string inputFilePath, string outputFilePath)
+        public Task<bool> GetTextInFile(string inputFilePath, string outputFilePath)
         {
             throw new NotImplementedException();
         }

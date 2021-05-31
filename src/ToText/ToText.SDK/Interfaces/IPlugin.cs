@@ -12,6 +12,6 @@ namespace ToText.SDK.Interfaces
 
         public bool IsFileSupported(string inputFilePath);
         public Task<string> GetTextInRawForm(string inputFilePath, Action<string> recognitionCallback = null);
-        public bool GetTextInFile(string inputFilePath, string outputFilePath);
+        public Task<bool> GetTextInFile(string inputFilePath, string outputFilePath);
     }
 }
