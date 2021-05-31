@@ -108,14 +108,19 @@ namespace ToText.Shell
                             // to write this to any file.
                             _log.Info($"Starting transcription production using the {processor} plugin.");
 
-                            Task transcriptionTask = Task.Run(() => sttProcessor.GetTextInRawForm(file, (data) =>
+                            Task t = Task.Run(async () =>
                             {
-                                Console.Write(data);
-                            }));
+                                var data = await sttProcessor.GetTextInRawForm(file, (data) =>
+                                {
+                                    Console.Write(data);
+                                });
+
+                                _log.Info($"Completed string: {data}");
+                            });
+                            t.Wait();
 
                             Console.WriteLine();
 
-                            transcriptionTask.Wait();
                             _log.Info("Transcript production complete.");
 
                             Console.ReadKey();

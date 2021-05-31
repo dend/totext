@@ -19,20 +19,37 @@ namespace ToText.Plugin.ACS
         public string Author { get => "Den Delimarsky"; }
         public string WebPage { get => "https://den.dev"; }
 
-        private StringBuilder _recognizedString;
-
-        public Task<string> GetTextInFile(string inputFilePath, string outputFilePath)
+        public bool GetTextInFile(string inputFilePath, string outputFilePath)
         {
             throw new NotImplementedException();
         }
 
         public async Task<string> GetTextInRawForm(string inputFilePath, Action<string> recognitionCallback = null)
         {
+            var recognizedString = new StringBuilder();
+
+            var result = await RunRecognition(inputFilePath, (data) =>
+            {
+                recognizedString.Append(data);
+                recognitionCallback(data);
+            });
+
+            if (result)
+            {
+                return recognizedString.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        private async static Task<bool> RunRecognition(string inputFilePath, Action<string> recognitionCallback = null)
+        {
             var credentials = MetaHelper.LoadSubscriptionData();
             if (credentials != null)
             {
                 var stopRecognition = new TaskCompletionSource<int>();
-                _recognizedString = new();
 
                 var speechConfig = SpeechConfig.FromSubscription(credentials.Key, credentials.Region);
 
@@ -42,16 +59,20 @@ namespace ToText.Plugin.ACS
                 recognizer.Recognized += (sender, eventArgs) =>
                 {
                     recognitionCallback?.Invoke(eventArgs.Result.Text + " ");
-                    _recognizedString.Append(eventArgs.Result.Text + " ");
                 };
 
                 await recognizer.StartContinuousRecognitionAsync();
+
                 Task.WaitAny(new[] { stopRecognition.Task });
-                return _recognizedString.ToString();
+
+                // Stops recognition.
+                await recognizer.StopContinuousRecognitionAsync().ConfigureAwait(false);
+
+                return true;
             }
             else
             {
-                return null;
+                return false;
             }
         }
 
