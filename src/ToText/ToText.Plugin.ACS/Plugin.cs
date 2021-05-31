@@ -31,6 +31,7 @@ namespace ToText.Plugin.ACS
             var credentials = MetaHelper.LoadSubscriptionData();
             if (credentials != null)
             {
+                var stopRecognition = new TaskCompletionSource<int>();
                 _recognizedString = new();
 
                 var speechConfig = SpeechConfig.FromSubscription(credentials.Key, credentials.Region);
@@ -40,11 +41,12 @@ namespace ToText.Plugin.ACS
 
                 recognizer.Recognized += (sender, eventArgs) =>
                 {
-                    _recognizedString.Append(eventArgs.Result.Text);
                     recognitionCallback?.Invoke(eventArgs.Result.Text);
+                    _recognizedString.Append(eventArgs.Result.Text);
                 };
 
                 await recognizer.StartContinuousRecognitionAsync();
+                Task.WaitAny(new[] { stopRecognition.Task });
                 return _recognizedString.ToString();
             }
             else
