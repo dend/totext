@@ -41,8 +41,8 @@ namespace ToText.Plugin.ACS
 
                 recognizer.Recognized += (sender, eventArgs) =>
                 {
-                    recognitionCallback?.Invoke(eventArgs.Result.Text);
-                    _recognizedString.Append(eventArgs.Result.Text);
+                    recognitionCallback?.Invoke(eventArgs.Result.Text + " ");
+                    _recognizedString.Append(eventArgs.Result.Text + " ");
                 };
 
                 await recognizer.StartContinuousRecognitionAsync();

@@ -106,14 +106,19 @@ namespace ToText.Shell
                         {
                             // User opted to generate transcript on the fly, and we don't need
                             // to write this to any file.
-                            _log.Info("Starting transcription production...");
+                            _log.Info($"Starting transcription production using the {processor} plugin.");
+
                             Task transcriptionTask = Task.Run(() => sttProcessor.GetTextInRawForm(file, (data) =>
                             {
-                                _log.Info(data);
+                                Console.Write(data);
                             }));
+
+                            Console.WriteLine();
 
                             transcriptionTask.Wait();
                             _log.Info("Transcript production complete.");
+
+                            Console.ReadKey();
                         }
                     }
                     else
