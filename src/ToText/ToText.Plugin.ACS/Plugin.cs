@@ -19,9 +19,15 @@ namespace ToText.Plugin.ACS
         public string Author { get => "Den Delimarsky"; }
         public string WebPage { get => "https://den.dev"; }
 
-        public Task<bool> GetTextInFile(string inputFilePath, string outputFilePath)
+        public async Task<bool> GetTextInFile(string inputFilePath, string outputFilePath, Action<string> recognitionCallback = null)
         {
-            throw new NotImplementedException();
+            var result = await RunRecognition(inputFilePath, (data) =>
+            {
+                File.AppendAllText(outputFilePath, data);
+                recognitionCallback?.Invoke(data);
+            });
+
+            return result;
         }
 
         public async Task<string> GetTextInRawForm(string inputFilePath, Action<string> recognitionCallback = null)
@@ -31,7 +37,7 @@ namespace ToText.Plugin.ACS
             var result = await RunRecognition(inputFilePath, (data) =>
             {
                 recognizedString.Append(data);
-                recognitionCallback(data);
+                recognitionCallback?.Invoke(data);
             });
 
             if (result)

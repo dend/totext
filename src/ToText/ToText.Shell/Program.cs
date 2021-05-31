@@ -106,7 +106,7 @@ namespace ToText.Shell
                         {
                             // User opted to generate transcript on the fly, and we don't need
                             // to write this to any file.
-                            _log.Info($"Starting transcription production using the {processor} plugin.");
+                            _log.Info($"Starting live transcript production using the {processor} plugin.");
 
                             Task t = Task.Run(async () =>
                             {
@@ -121,10 +121,34 @@ namespace ToText.Shell
 
                             Console.WriteLine();
 
-                            _log.Info("Transcript production complete.");
-
-                            Console.ReadKey();
+                            _log.Info("Live transcript production complete.");
                         }
+                        else
+                        {
+                            // User opted to generate transcript and write it to a file.
+                            _log.Info($"Starting transcript production using the {processor} plugin.");
+                            _log.Info($"Content will be stored in {outputFile}.");
+
+                            Task t = Task.Run(async () =>
+                            {
+                                var data = await sttProcessor.GetTextInFile(file, outputFile, (data) => 
+                                {
+                                    _log.Info($"Added {MetaHelper.GetWordLength(data)} words.");
+                                });
+
+                                if (!data)
+                                {
+                                    _log.Error("There was an error writing to file. Check log for additional details.");
+                                }
+                            });
+                            t.Wait();
+
+                            Console.WriteLine();
+
+                            _log.Info("Transcript production complete.");
+                        }
+
+                        Console.ReadKey();
                     }
                     else
                     {
