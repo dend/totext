@@ -9,6 +9,8 @@
 	<br>
 </div>
 
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://den.dev/ukraine)
+
 This tool is nothing more than a wrapper around the variety of speech-to-text services out there. It simplifies the process of generating text transcripts from audio files, born from my own need to do that for [The Work Item](https://theworkitem.com).
 
 ## Build
